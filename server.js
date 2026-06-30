@@ -5,8 +5,12 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// ✅ YOUR OPENROUTER API KEY
-const OPENROUTER_API_KEY = 'YOUR OPENROUTER API KEY';
+// Reads from environment variable in production (Render),
+// falls back to placeholder for local development
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || 'YOUR_OPENROUTER_API_KEY';
+
+// Allow requests from your deployed frontend (update after deploying to Vercel)
+const ALLOWED_ORIGIN = process.env.FRONTEND_URL || 'http://localhost:3000';
 
 const MODELS = [
   'google/gemma-4-31b-it:free',
@@ -95,7 +99,8 @@ async function warmUp() {
   }
 }
 
-app.listen(3001, () => {
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
   console.log('✅ Novara proxy running on http://localhost:3001');
   console.log('   Key set:', OPENROUTER_API_KEY !== 'YOUR_OPENROUTER_API_KEY' ? '✅ Yes' : '❌ No — add your key!');
   console.log('   Test at: http://localhost:3001/test');
