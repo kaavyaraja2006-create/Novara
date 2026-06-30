@@ -1,7 +1,9 @@
 // Gemini API utility — calls local proxy server to avoid CORS issues
 // Add your API key in server.js (not here)
 
-const PROXY_URL = 'http://localhost:3001/gemini';
+const PROXY_URL = process.env.REACT_APP_API_URL
+  ? `${process.env.REACT_APP_API_URL}/gemini`
+  : 'http://localhost:3001/gemini';
 
 async function callGemini(prompt, retries = 4) {
   let lastError = new Error('Failed to reach proxy server.');
